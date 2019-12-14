@@ -65,6 +65,7 @@
     "xml-loader": "^1.2.1"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
     "antd": "^3.16.5",
     "mobx": "^5.9.4",
     "mobx-react": "^5.4.3",
