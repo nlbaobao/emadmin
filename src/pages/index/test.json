@@ -1,0 +1,111 @@
+{
+  "uiType": "UI010",
+  "evaluation": {
+    "IndicatoRresult": {
+      "result": "结果展示",
+      "value": {
+        "columns": [
+          {
+            "title": "状态类别",
+            "children": [
+              {
+                "title": "",
+                "dataIndex": "blank",
+                "key": "number",
+                "width": 100
+              },
+              {
+                "title": "a",
+                "dataIndex": "a",
+                "key": "a",
+                "width": 200,
+                "render": {
+                  "props": {
+                    "rowSpan": 2
+                  }
+                }
+              },
+              {
+                "title": "b",
+                "dataIndex": "b",
+                "key": "b",
+                "width": 100
+              }
+            ]
+          },
+          {
+            "title": "类别指标",
+            "children": [
+              {
+                "title": "x",
+                "dataIndex": "x",
+                "key": "x",
+                "width": 200
+              },
+              {
+                "title": "y",
+                "dataIndex": "y",
+                "key": "y"
+              }
+            ]
+          },
+          {
+            "title": "决策类别",
+            "children": [
+              {
+                "title": "",
+                "dataIndex": "decisionc",
+                "key": "decisionc",
+                "width": 200
+              },
+              {
+                "title": "a",
+                "dataIndex": "decisiona",
+                "key": "street",
+                "width": 200
+              },
+              {
+                "title": "b",
+                "dataIndex": "decisionb",
+                "key": "building",
+                "width": 100
+              }
+            ]
+          },
+          {
+            "title": "目标值",
+            "children": [
+              {
+                "title": "m",
+                "dataIndex": "m",
+                "key": "m",
+                "width": 200
+              },
+              {
+                "title": "n",
+                "dataIndex": "n",
+                "key": "n",
+                "width": 100
+              }
+            ]
+          }
+        ],
+        "dataSource": [
+          {
+            "key": "key",
+            "b": "bbbbb",
+            "a": "Lake Park",
+            "decisiona": "C",
+            "decisionb": 2035,
+            "x": "Lake Street 42",
+            "y": "SoftLake Co",
+            "m": "testm",
+            "n": "testn",
+            "blank": "testblank",
+            "decisionc": "1"
+          }
+        ]
+      }
+    }
+  }
+}
