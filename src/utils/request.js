@@ -1,6 +1,4 @@
 import axios from "axios";
-import message from "antd";
-import qs from 'qs'
 
 export const http = request => {
     //跨域问题会引发两次请求 https://juejin.im/post/5c68b2efe51d457fd52ee155
