@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2019-12-26 10:38:38
+ * @LastEditTime : 2019-12-26 11:05:43
+ * @LastEditors  : Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /emadmin/src/utils/fetch.js
+ */
 import 'whatwg-fetch';
 import { stringify } from 'qs';
 
@@ -27,12 +35,13 @@ export const get = (url, data) => {
  * @param {*} data 
  */
 export const post = (url, data) => {
-    data.token = localStorage.getItem('token')?localStorage.getItem('token'):undefined
+   const  token = localStorage.getItem('token')?localStorage.getItem('token'):undefined
     const newUrl = url + '?' + stringify(data) + (stringify(data) === '' ? '' : '&') +'_random=' + Date.now();
     return fetch(newUrl, {
         // body: JSON.stringify(data), 
         cache: 'no-cache',
         headers: {
+            'X-token': token,
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
@@ -50,11 +59,12 @@ export const post = (url, data) => {
  * @param {*} data 
  */
 export const post1 = (url, data) => {
-    data.token = localStorage.getItem('token')?localStorage.getItem('token'):undefined
+    const  token = localStorage.getItem('token')?localStorage.getItem('token'):undefined
     return fetch(url, {
         body:data, 
         cache: 'no-cache',
         headers: {
+            'X-token': token,
             'Accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
             'Access-Control-Allow-Origin': '*',

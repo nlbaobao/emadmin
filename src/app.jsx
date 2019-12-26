@@ -8,6 +8,7 @@ import Details from "./pages/details/details";
 import TestTable from "./pages/list/test-table";
 import Banner from './pages/other/banner'
 import Product from './pages/product/index'
+import UserMessage from './pages/user/index'
 
 export default class APP extends React.Component {
   render() {
@@ -16,7 +17,7 @@ export default class APP extends React.Component {
         <HashRouter>
           <Switch>
             <Route exact path="/home" render={() => <Redirect to='/user/message' />} />
-            <Route exact path="/home/user/message" component={List} />
+            <Route exact path="/home/user/message" component={UserMessage} />
             <Route exact path="/home/user/message" component={List} />
             <Route exact path="/home/list/details" component={Details} />
             <Route exact path="/home/other/banner" component={Banner} />

@@ -10,7 +10,7 @@ export class Product extends Component {
         this.state = {
             dataSource: [{ bannerContent: '1', bannerHref: '11111', status: '0' }, { bannerContent: '1', bannerHref: '11111', status: '0' }],
             visible: false,
-            type:'1', // 1代表新增
+            type: '1', // 1代表新增
         }
         this.columns = [
             {
@@ -37,14 +37,14 @@ export class Product extends Component {
                         <span onClick={() => {
                             this.setState({
                                 visible: true,
-                                type:'1'
+                                type: '1'
                             })
                         }}>新增</span>
                         <Divider type="vertical" />
                         <span onClick={() => {
                             this.setState({
                                 visible: true,
-                                type:'2'
+                                type: '2'
                             })
                         }}>修改</span>
                         <Divider type="vertical" />
@@ -75,8 +75,27 @@ export class Product extends Component {
             }
         })
     }
+    //creat或者update
+    handleMessage = () => {
+        const { form } = props;
+        const { } = form;
+        const rules = ['industrySummary'];
+        form.validateFields(rules, (err, values) => {
+            if (!err) {
+                ajax({
+
+                }).then(() => {
+
+                })
+            }
+        });
+    }
+    //获取详细信息
+
+
+
     render() {
-        const { dataSource, visible,type } = this.state;
+        const { dataSource, visible, type } = this.state;
         const { form } = this.props;
         const { getFieldDecorator } = form;
         return (<div className='banner-list'>
@@ -85,10 +104,10 @@ export class Product extends Component {
                     visible: true
                 })
             }}>新增</Button> : null}
-            <Table style={{marginBottom:20}} pagination={false} dataSource={dataSource} columns={this.columns} />
+            <Table style={{ marginBottom: 20 }} pagination={false} dataSource={dataSource} columns={this.columns} />
             <Pagination defaultCurrent={6} total={500} />
             <Drawer
-              title={type==='1'?'新增banner':'修改banner'}
+                title={type === '1' ? '新增banner' : '修改banner'}
                 width={720}
                 onClose={() => {
                     this.setState({
