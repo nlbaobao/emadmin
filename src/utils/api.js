@@ -1,0 +1,26 @@
+export default{
+    //登录
+    'login':'/admin/login',
+    'test':'/todos/1',
+    //user
+    'userChildList':'/user/userChildList',
+    'userList':'/user/userList',
+    'userMoneyLogList':'/user/userMoneyLogList',
+    'userWithDrawAudit':'/user/userWithDrawAudit',
+    'userWithDrawList':'/user/userWithDrawList',
+    //product
+    'brand':'/product/brand',
+    'userList':'/product/cat',
+    'deleteBrand':'/product/deleteBrand',
+    'deleteCat':'/product/deleteCat',
+    'userList':'/product/getBrandList',
+    'getCatTotalList':'/product/getCatTotalList',
+    'saveBrand':'/product/saveBrand',
+    'saveCat':'/product/saveCat',
+    //banner
+    'addBanner':'/banner/addBanner',
+    'bannerList':'/banner/bannerList',
+    'deleteBanner':'/banner/deleteBanner',
+    'getBannerDetail':'/banner/getBannerDetail',
+    'updateBanner':'/banner/updateBanner',
+}

@@ -25,6 +25,7 @@ const config = {
   },
   devServer: {
     contentBase: appPublic,
+    sockHost: 'http://localhost:8000/',
     hot: true,
     host: "localhost",
     port: 8000,

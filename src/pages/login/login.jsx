@@ -1,128 +1,67 @@
 import React, { Component } from "react";
-import {
-  bubbleSort,
-  quickSort,
-  noRepeat,
-  noRepeat1,
-  deepClone,
-  maxCount,
-  maxCount1,
-  tetsReduc,
-  time,
-  testlaji,
-  shuffle,
-  deepObj
-} from "../pdd/paixu";
-import { http, catchTest, test1, timeout, order, test2 } from "../pdd/http";
-import { bibao } from "../pdd/bibao";
-import { settest, settest2 } from "../pdd/setTimeout.js";
-import { resolveTest, thenable } from "../pdd/promiseResolve";
+import { Input, Button,Divider,message} from 'antd';
+import {ajax } from "../../utils/index";
+import './index.less'
 
-export class login extends Component {
-  componentDidMount() {
-    deepObj();
-    // const arr = [3, 44, 38, 5, 47, 15, 36, 26, 27, 2, 46, 4, 19, 50, 48];
-    // bubbleSort(arr);
-    // quickSort(arr);
-    // console.log(arr, "test");
-    // const objectArr = [{ id: 1 }, { id: 1 }, { id: 2 }];
-    // const arr = [
-    //   {
-    //     name: 4,
-    //     age: "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
-    //     gender: "AAAAAA.doc"
-    //   },
-    //   {
-    //     name: 5,
-    //     age: "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
-    //     gender: "AAAAAA.doc"
-    //   },
-    //   {
-    //     name: 2,
-    //     age: "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
-    //     gender: "AAAAAA.doc"
-    //   },
-    //   {
-    //     name: 3,
-    //     gender: "BBBBBB.doc",
-    //     age: "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix"
-    //   },
-    //   {
-    //     name: 7,
-    //     age: "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
-    //     gender: "CCCCCC.doc"
-    //   },
-    //   {
-    //     name: 1,
-    //     age: "Y13xG_4wQnOWK1QwJLgg11d0pS4hewePU95UHtpMl3eE81uS74NC-6zu-Rtnw4Ix",
-    //     gender: "AAAAAA.doc"
-    //   }
-    // ];
+export class Login extends Component {
 
-    // var obj = {
-    //   name: [1, 2, 3],
-    //   value: {
-    //     a: "b"
-    //   },
-    //   test: "test"
-    // };
-    // deepClone(obj);
-    // var arr = [
-    //   3,
-    //   5,
-    //   6,
-    //   5,
-    //   9,
-    //   8,
-    //   10,
-    //   5,
-    //   7,
-    //   7,
-    //   10,
-    //   7,
-    //   7,
-    //   7,
-    //   7,
-    //   10,
-    //   10,
-    //   10,
-    //   10,
-    //   10
-    // ];
-    shuffle();
-    // bubbleSort(arr);
-    // noRepeat1(arr);
-    // maxCount(arr);
-    // maxCount1(arr);
-    // const arr = [12, 34, 23];
-    // tetsReduc(arr);
-    // time(10000);
-    // http();
-    // catchTest()
-    //   .then(param => {
-    //     console.log(param);
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
-    // test1();
-    // console.log(timeout);
-    // timeout(3000)
-    //   .then(value => {
-    //     console.log(value);
-    //   })
-    //   .catch();
-    // order();
-    // test2();
-    // bibao();
-    // test();
-    // settest2();
-    // resolveTest();
-    // thenable();
-    // test1();
+  constructor(props) {
+    super(props)
+    this.state = {
+      userName: '',
+      password: ''
+    }
+
+  }
+  componentDidMount(){
+    
+  }
+  login=()=>{
+    const {userName,password} = this.state
+    ajax({
+      method:'post',
+      data:{
+        username:userName,
+        password:password
+      },
+      api:'login'
+    }).then(res=>{
+      console.log(res)
+      if(res.code === 200){
+        const {msg} = res
+        message.success('登录失败')
+        window.location.hash='/home/list'
+        //把登录信息存进lcoalstorage
+        localStorage.setItem(msg,'token')
+      }
+      else{
+        message.error('登录失败')
+      }
+    })
   }
   render() {
-    return <div>loginaaaaaaaaa!!!!!!!!!!</div>;
+    const { userName, password } = this.state;
+    return (<div className='login'>
+      <div className='middle'>
+        <h3>妆小样后台管理系统</h3>
+        <Divider />
+        <Input value={userName} onChange={(e) => {
+          const { value } = e.target;
+          this.setState({
+            userName: value
+          })
+        }} placeholder="请输入账号" />
+        <Input.Password style={{marginTop:20}}
+          onChange={(e) => {
+            const { value } = e.target;
+            this.setState({
+              password: value
+            })
+          }} value={password} placeholder="请输入密码" />
+        <Button onClick={this.login} style={{width:'100%',marginTop:20}} type='primary'>登录</Button>
+      </div>
+
+    </div>)
   }
 }
-export default login;
+export default Login;

@@ -3,7 +3,7 @@ import axios from "axios";
 export const http = request => {
     //跨域问题会引发两次请求 https://juejin.im/post/5c68b2efe51d457fd52ee155
   let { timeout, api, method, data, isCancelRequest = false } = request;
-  const baseURL = "https://jsonplaceholder.typicode.com/";
+  const baseURL = "https://jsonplace1holder.typicode.com/";
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
   // 创建axios实例
   let instance = axios.create({ timeout, baseURL });
@@ -28,7 +28,6 @@ export const http = request => {
     method,
     url: api
   };
-
   methodMap.includes(lowerMethod)
     ? (options.data = data)
     : (options.params = data);
@@ -46,7 +45,7 @@ export const http = request => {
     //     debugger;
     // }
       config.headers["xsrf-token"] = window._csrf;
-      removePending(config); // 在一个ajax发送前执行一下取消操作
+      // removePending(config); // 在一个ajax发送前执行一下取消操作
       config.cancelToken = new CancelToken(function executor(candelFunc) {
         // 这里的ajax标识我是用请求地址&请求方式拼接的字符串，当然你可以选择其他的一些方式
         if (isCancelRequest) {
@@ -66,7 +65,7 @@ export const http = request => {
   instance.interceptors.response.use(
     // 请求成功
     response => {
-      removePending(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
+      // removePending(response.config); //在一个ajax响应后再执行一下取消操作，把已经完成的请求从pending中移除
       return response;
     },
     // 请求失败
