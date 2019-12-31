@@ -1,8 +1,24 @@
 import React, { Component } from "react";
-import { message, Button, Table, Divider, Drawer, Form, Col, Row, Input, Select, Pagination } from 'antd';
+import { message, Button, Table, Divider, Upload, Drawer, Form, Col,Icon,Row, Input, Select, Pagination } from 'antd';
 import { ajax } from "../../utils/index";
 import './index.less'
-
+const props = {
+    name: 'file',
+    action: 'http://39.98.45.151:9999/file/upload',
+    headers: {
+        authorization: 'authorization-text',
+    },
+    onChange(info) {
+        if (info.file.status !== 'uploading') {
+            console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+            message.success(`${info.file.name} file uploaded successfully`);
+        } else if (info.file.status === 'error') {
+            message.error(`${info.file.name} file upload failed.`);
+        }
+    },
+};
 export class Product extends Component {
 
     constructor(props) {
@@ -153,7 +169,15 @@ export class Product extends Component {
                                 )}
                             </Form.Item>
                         </Col>
-
+                        <Col span={12}>
+                            <Form.Item label="上传">
+                                <Upload {...props}>
+                                    <Button>
+                                        <Icon type="upload" /> Click to Upload
+    </Button>
+                                </Upload>
+                            </Form.Item>
+                        </Col>
                     </Row>
 
 
