@@ -3,7 +3,8 @@
 
     .container {
         height: 100%;
-
+        min-width: 1000px;
+        overflow: auto;
         .ant-layout-header {
             color: white;
             height: 64px;
@@ -26,5 +27,19 @@
             width: 200px;
             overflow:auto;
         }
+        .sku-upload{
+            position: relative;
+            .sku-x{
+                position: absolute;
+    font-size: 25px;
+    display: inline-block;
+    /* left: -4px; */
+    right: 29px;
+    top: -10px;
+    cursor: pointer;
+    z-index: 10;
+            }
+        }
     }
+  
 }

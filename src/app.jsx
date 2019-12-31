@@ -8,6 +8,9 @@ import Details from "./pages/details/details";
 import TestTable from "./pages/list/test-table";
 import Banner from './pages/other/banner'
 import Product from './pages/product/index'
+import ProductBrand from './pages/product/productBrand'
+import ProductCat from './pages/product/productCat'
+import addProduct from './pages/product/addProduct'
 import UserMessage from './pages/user/index'
 
 export default class APP extends React.Component {
@@ -22,7 +25,9 @@ export default class APP extends React.Component {
             <Route exact path="/home/list/details" component={Details} />
             <Route exact path="/home/other/banner" component={Banner} />
             <Route exact path="/home/product/all" component={Product} />
-
+            <Route exact path="/home/product/brand" component={ProductBrand} />
+            <Route exact path="/home/product/cat" component={ProductCat} />
+            <Route exact path="/home/product/add" component={addProduct} />
           </Switch>
         </HashRouter>
       </Layout>
