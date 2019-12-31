@@ -1,32 +1,23 @@
 import React, { Component } from "react";
-import { message, Button, Table, Divider, Upload, Drawer, Form, Col,Icon,Row, Input, Select, Pagination } from 'antd';
+import { message, Button, Table, Divider, Drawer, Form, Col, Icon, Row, Upload, Input, Select, Pagination } from 'antd';
 import { ajax } from "../../utils/index";
+import ImgUpload from '../../components/imgUpload'
+import { observer, inject } from 'mobx-react'
 import './index.less'
-const props = {
-    name: 'file',
-    action: 'http://39.98.45.151:9999/file/upload',
-    headers: {
-        authorization: 'authorization-text',
-    },
-    onChange(info) {
-        if (info.file.status !== 'uploading') {
-            console.log(info.file, info.fileList);
-        }
-        if (info.file.status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully`);
-        } else if (info.file.status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
-        }
-    },
-};
-export class Product extends Component {
+@inject('PublicStatus')
+@observer
+export class Banner extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            dataSource: [{ bannerContent: '1', bannerHref: '11111', status: '0' }, { bannerContent: '1', bannerHref: '11111', status: '0' }],
+            dataSource: [],
             visible: false,
             type: '1', // 1代表新增
+            searchType: '',
+            status: '',
+            page: 1,
+            size: 20
         }
         this.columns = [
             {
@@ -36,7 +27,6 @@ export class Product extends Component {
             },
             {
                 title: '链接',
-                dataIndex: 'bannerHref',
                 key: 'bannerHref',
             },
             {
@@ -64,45 +54,112 @@ export class Product extends Component {
                             })
                         }}>修改</span>
                         <Divider type="vertical" />
-                        <span>删除</span>
+                        <span onClick={()=>{
+                            this.deletBanner('1')
+                        }}>删除</span>
                     </div>
                 }
             },
         ];
     }
     componentDidMount() {
-
+        this.getList()
     }
-    login = () => {
+    getList = () => {
+        const { type, status, page, size } = this.state;
         ajax({
-            method: 'post',
+            method: 'postJson',
             data: {
-                username: userName,
-                password: password
+                type,
+                status,
+                page,
+                size
             },
-            api: 'login'
+            api: 'bannerList'
         }).then(res => {
             console.log(res)
             if (res.code === 200) {
-
+                this.setState({
+                    dataSource: res.data.list
+                })
             }
             else {
-                message.error('登录失败')
+                message.error(res.message)
             }
         })
     }
+    save = (values) => {
+        ajax({
+            method: 'postJson',
+            data: {values},
+            api: 'addBanner'
+        }).then(res => {
+            console.log(res)
+            if (res.code === 200) {
+                message.success(res.msg)
+                this.getList()
+                this.setState({
+                    visible: false
+                })
+            }
+            else {
+                message.error(res.message)
+            }
+        })
+    }
+    deletBanner = (bannerId) => {
+        ajax({
+            method: 'post',
+            data: bannerId,
+            api: 'deleteBanner'
+        }).then(res => {
+            console.log(res)
+            if (res.code === 200) {
+                message.success(res.msg)
+                this.getList()
+            }
+            else {
+                message.error(res.message)
+            }
+        })
+    }
+
+    updateBnnaer = (values) => {
+        ajax({
+            method: 'post',
+            data: values,
+            api: 'updateBanner'
+        }).then(res => {
+            console.log(res)
+            if (res.code === 200) {
+                message.success(res.msg)
+                this.getList()
+                this.setState({
+                    visible: false
+                })
+            }
+            else {
+                message.error(res.message)
+            }
+        })
+    }
+
     //creat或者update
     handleMessage = () => {
-        const { form } = props;
-        const { } = form;
-        const rules = ['industrySummary'];
-        form.validateFields(rules, (err, values) => {
+        const { form,PublicStatus } = this.props;
+        const { type } = this.state;
+        const {file} = PublicStatus
+        
+        form.validateFields((err, values) => {
+            console.log(values);
             if (!err) {
-                ajax({
-
-                }).then(() => {
-
-                })
+                if(type==='1'){
+                this.save(values)
+                }
+                if(type==='2'){
+                    this.updateBnnaer(values)
+                }
+               
             }
         });
     }
@@ -111,15 +168,48 @@ export class Product extends Component {
 
 
     render() {
-        const { dataSource, visible, type } = this.state;
+        const { dataSource, visible, type, searchType, status } = this.state;
         const { form } = this.props;
         const { getFieldDecorator } = form;
         return (<div className='banner-list'>
-            {dataSource.length === 0 ? <Button onClick={() => {
+            {dataSource.length === 0 ? <Button style={{ marginBottom: 20 }} onClick={() => {
                 this.setState({
                     visible: true
                 })
             }}>新增</Button> : null}
+            <div>
+                {dataSource.length === 0 ? null : <Row gutter={24}>
+                    <Col span={8}>  <Form.Item label="内容">
+
+                        <Select value={searchType} onChange={(e) => {
+                            this.setState({
+                                searchType: e
+                            })
+                        }} style={{ width: 200 }}>
+                            <Option key='1'>Banner</Option>
+                            <Option key='2'>活动</Option>
+                            <Option key='3'>公告</Option>
+                        </Select>
+                    </Form.Item></Col>
+                    <Col span={8}>  <Form.Item label="状态">
+                        <Select value={status} onChange={(e) => {
+                            this.setState({
+                                status: e
+                            })
+                        }} style={{ width: 200 }}>
+                            <Option key='2'>正常</Option>
+                            <Option key='3'>禁用</Option>
+                            <Option key='4'>草稿</Option>
+                        </Select>
+                    </Form.Item></Col>
+                    <Col span={8}>  <Form.Item label="搜索">
+                        <Button onClick={() => {
+                            this.getList(searchType, status)
+                        }}>搜索</Button>
+                    </Form.Item></Col>
+                </Row>}
+            </div>
+
             <Table style={{ marginBottom: 20 }} pagination={false} dataSource={dataSource} columns={this.columns} />
             <Pagination defaultCurrent={6} total={500} />
             <Drawer
@@ -136,10 +226,10 @@ export class Product extends Component {
                 <Form layout="vertical" hideRequiredMark>
                     <Row gutter={16}>
                         <Col span={12}>
-                            <Form.Item label="内容">
+                            <Form.Item label="banner内容">
                                 {getFieldDecorator('banner', {
-                                    rules: [{ required: true, message: 'Please enter user name' }],
-                                })(<Input placeholder="Please enter user name" />)}
+                                    rules: [{ required: true, message: '请填写banner内容' }],
+                                })(<Input placeholder="请填写banner内容" />)}
                             </Form.Item>
                         </Col>
                         <Col span={12}>
@@ -149,7 +239,6 @@ export class Product extends Component {
                                 })(
                                     <Input
                                         style={{ width: '100%' }}
-
                                         placeholder="请填写链接"
                                     />,
                                 )}
@@ -160,27 +249,67 @@ export class Product extends Component {
                         <Col span={12}>
                             <Form.Item label="bannerOrder">
                                 {getFieldDecorator('bannerOrder', {
-                                    rules: [{ required: true, message: 'Please select an owner' }],
+                                    rules: [{ required: true, message: 'banner顺序是必选项' }],
                                 })(
-                                    <Select placeholder="Please select an owner">
-                                        <Option value="xiao">Xiaoxiao Fu</Option>
-                                        <Option value="mao">Maomao Zhou</Option>
+                                    <Input
+                                        style={{ width: '100%' }}
+                                        placeholder="banner顺序"
+                                    />,
+                                )}
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item label="跳转路径">
+                                {getFieldDecorator('url', {
+                                    rules: [{ required: true, message: '跳转路径是必选项' }],
+                                })(
+                                    <Input
+                                        style={{ width: '100%' }}
+                                        placeholder="请填写跳转路径"
+                                    />,
+                                )}
+                            </Form.Item>
+                        </Col>
+                    </Row>
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item label="banner类型">
+                                {getFieldDecorator('type', {
+                                    rules: [{ required: true, message: '类型势必选项' }],
+                                })(
+                                    <Select placeholder="请填写类型">
+                                        <Option key='1'>Banner</Option>
+                                        <Option key='2'>活动</Option>
+                                        <Option key='3'>公告</Option>
                                     </Select>,
                                 )}
                             </Form.Item>
                         </Col>
                         <Col span={12}>
-                            <Form.Item label="上传">
-                                <Upload {...props}>
-                                    <Button>
-                                        <Icon type="upload" /> Click to Upload
-    </Button>
-                                </Upload>
+                            <Form.Item label="banner状态">
+                                {getFieldDecorator('status', {
+                                    rules: [{ required: true, message: 'banner状态是必选项' }],
+                                })(
+                                    <Select placeholder="请填写banner状态">
+                                        <Option key='2'>正常</Option>
+                                        <Option key='3'>禁用</Option>
+                                        <Option key='4'>草稿</Option>
+                                    </Select>,
+                                )}
                             </Form.Item>
                         </Col>
                     </Row>
-
-
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <Form.Item label="上传banner">
+                                <ImgUpload />
+                                {/* <Upload>
+                                    <Button>
+                                        <Icon type="upload" />上传banner</Button>
+                                </Upload> */}
+                            </Form.Item>
+                        </Col>
+                    </Row>
                 </Form>
                 <div
                     style={{
@@ -194,9 +323,7 @@ export class Product extends Component {
                         textAlign: 'right',
                     }}
                 >
-                    <Button style={{ marginRight: 8 }}>
-                        确定
-            </Button>
+                    <Button onClick={this.handleMessage} style={{ marginRight: 8 }}>确定</Button>
                     <Button type="primary">
                         取消
             </Button>
@@ -205,4 +332,4 @@ export class Product extends Component {
         </div>)
     }
 }
-export default Form.create()(Product);
+export default Form.create()(Banner);

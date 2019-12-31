@@ -41,7 +41,7 @@ export const post = (url, data) => {
         // body: JSON.stringify(data), 
         cache: 'no-cache',
         headers: {
-            'X-token': token,
+            'token': token,
             'Accept': 'application/json',
             'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
@@ -58,15 +58,15 @@ export const post = (url, data) => {
  * @param {*} url 
  * @param {*} data 
  */
-export const post1 = (url, data) => {
+export const postJson = (url, data) => {
     const  token = localStorage.getItem('token')?localStorage.getItem('token'):undefined
     return fetch(url, {
-        body:data, 
+        body:JSON.stringify(data), 
         cache: 'no-cache',
         headers: {
-            'X-token': token,
+            'token': token,
             'Accept': 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+            'Content-Type': 'application/json; charset=utf-8',
             'Access-Control-Allow-Origin': '*',
             "access-control-allow-credentials": "true",
             'withCredentials': 'true'
@@ -75,4 +75,18 @@ export const post1 = (url, data) => {
         method: 'POST',
     })
     .then(response => response.json()) // parses response to JSON
+}
+
+export  const fileUpload = (url,data)=>{
+    return fetch(url, {
+        body: data,
+        cache: 'no-cache',
+        headers: {
+            'token':localStorage.getItem('token')?localStorage.getItem('token'):undefined,
+            'Access-Control-Allow-Origin': '*',
+            "access-control-allow-credentials": "true",
+            'withCredentials': 'true'
+        },
+        method: 'POST',
+    }) .then(response => response.json())// parses response to JSON
 }

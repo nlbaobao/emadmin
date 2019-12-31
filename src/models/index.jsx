@@ -1,4 +1,4 @@
-import Test  from './model'
+import PublicStatus  from './model'
 export default{
-    Test
+    PublicStatus
 }

@@ -32,7 +32,8 @@ export class Login extends Component {
         message.success('登录失败')
         window.location.hash='/home/list'
         //把登录信息存进lcoalstorage
-        localStorage.setItem(msg,'token')
+        localStorage.setItem('token',msg)
+        
       }
       else{
         message.error('登录失败')

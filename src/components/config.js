@@ -9,20 +9,16 @@ export default {
                     url: '/user/message'
                 },
                 {
-                    subName: '会员管理',
+                    subName: '提现记录',
                     key: "s_2",
-                    url: '/user/vip'
+                    url: '/user/money'
                 }
             ]
         },
         {
             name: '商品管理',
             key: 'menu_2',
-            child: [{
-                    subName: '发布商品',
-                    key: "s_3",
-                    url: '/product/publish'
-                },
+            child: [
                 {
                     subName: '所有商品',
                     key: "s_4",
@@ -31,7 +27,12 @@ export default {
                 {
                     subName: '类目管理',
                     key: "s_5",
-                    url: '/product/manage'
+                    url: '/product/cat'
+                },
+                {
+                    subName: '品牌管理',
+                    key: "s_6",
+                    url: '/product/brand'
                 }
             ]
         },
@@ -40,7 +41,7 @@ export default {
             key: 'menu_3',
             child: [{
                 subName: '全部订单',
-                key: "s_6",
+                key: "s_7",
                 url: '/order/manange'
             }
         ]
@@ -50,12 +51,12 @@ export default {
             key: 'menu_4',
             child: [{
                 subName: '拼团活动',
-                key: "s_7",
+                key: "s_8",
                 url: '/activity/Assemble'
             },
             {
                 subName: '限时特价',
-                key: "s_8",
+                key: "s_9",
                 url: '/activity/SpecialOffer'
             },
             {
@@ -98,7 +99,7 @@ export default {
             name: '数据中心',
             key: 'menu_8'
         }
-    ]
-
+    ],
+    imgIp:'http://2hq8388555.goho.co/wx'
 }
     }

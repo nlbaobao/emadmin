@@ -8,19 +8,42 @@ export default{
     'userMoneyLogList':'/user/userMoneyLogList',
     'userWithDrawAudit':'/user/userWithDrawAudit',
     'userWithDrawList':'/user/userWithDrawList',
-    //product
+    //商品品牌
     'brand':'/product/brand',
-    'userList':'/product/cat',
-    'deleteBrand':'/product/deleteBrand',
-    'deleteCat':'/product/deleteCat',
-    'userList':'/product/getBrandList',
-    'getCatTotalList':'/product/getCatTotalList',
+    'brandList':'/product/getBrandList',
+    'productListPage':'/product/getProductListPage',
+    'catTotalList':'/product/getCatTotalList',
     'saveBrand':'/product/saveBrand',
+    'deleteBrand':'/product/deleteBrand',
+    'putBrand':'/product/putBrand',
+    'downBrand':'/product/downBrand',
+    //商品分类
+    'cat':'/product/cat',
+    'putCat':'/product/putProductCat',
+    'downCat':'/product/downProductCat',
+    'deleteCat':'/product/deleteCat',
+    'catList':'/product/catList',
+    'getCatTotalList':'/product/getCatTotalList',
     'saveCat':'/product/saveCat',
+    //商品
+    'productList':'/product/getProductListPage',
+    'product':'/product/getProductListPage',
+    'productSkuList':'/product/getProductListPage',
+    'saveProduct':'/product/saveProduct',
+    'deleteProduct':'/product/deleteProduct',
+    'downProduct':'/product/downProduct',
+    'putAwayProduct':'/product/putAwayProduct',
+    'getProductSkuListPage':'/product/getProductById',
+    'getProductCommentListPage':'/product/getProductCommentListPage',
+    'putAwayComment':'/product/putAwayComment',
+    'disableComment':'/product/disableComment',
+
     //banner
     'addBanner':'/banner/addBanner',
     'bannerList':'/banner/bannerList',
     'deleteBanner':'/banner/deleteBanner',
     'getBannerDetail':'/banner/getBannerDetail',
     'updateBanner':'/banner/updateBanner',
+    //上传
+    'fileUpload':'/fileUpload'
 }
