@@ -3,14 +3,11 @@ import { message, Button, Table, Divider, Drawer, Form, Col, Row, Input, Select,
 import { ajax } from '../../utils/index';
 import './index.less';
 
-export class ProductCat extends Component {
+export class Coupon extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: [],
-      cats: [],
       visible: false,
-      type: '1', // 1代表新增
     };
     this.columns = [
       {
@@ -22,212 +19,16 @@ export class ProductCat extends Component {
         title: 'icon',
         dataIndex: 'catIcon',
         key: 'icon',
-        render: record => {
-          return (
-            <img
-              src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577428023099&di=d4967fbf704eda41a255e3ea7c0b49bb&imgtype=0&src=http%3A%2F%2F7776175.s21i-7.faiusr.com%2F2%2FABUIABACGAAgy_n_tgUo2ILWNjCgBziABA.jpg"
-              alt=""
-              style={{
-                width: '5    0px',
-                height: '50px',
-                borderRadius: '50%',
-              }}
-            />
-          );
-        },
       },
       {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
-        render: s => {
-          if (s == 2) {
-            return '正常';
-          } else if (s == 3) {
-            return '禁用';
-          } else {
-            return '草稿';
-          }
-        },
-      },
-      {
-        title: '操作',
-        dataIndex: 'id',
-        key: 'operate',
-        render: record => {
-          return (
-            <div>
-              <span
-                onClick={() => {
-                  this.showDetail(record);
-                  this.setState({
-                    visible: true,
-                    type: '2',
-                  });
-                }}
-              >
-                修改
-              </span>
-              <Divider type="vertical" />
-              <span
-                onClick={() => {
-                  this.delete(record);
-                }}
-              >
-                删除
-              </span>
-              <Divider type="vertical" />
-              <span
-                onClick={() => {
-                  this.handlePut(record);
-                }}
-              >
-                上架
-              </span>
-              <Divider type="vertical" />
-              <span
-                onClick={() => {
-                  this.handleDown(record);
-                }}
-              >
-                下架
-              </span>
-            </div>
-          );
-        },
       },
     ];
   }
-  componentDidMount() {
-    this.getList();
-    this.getTotalCat();
-  }
-  delete = id => {
-    ajax({
-      method: 'postJson',
-      data: {
-        id: id,
-      },
-      api: 'deleteCat',
-    }).then(res => {
-      if (res.code === 200) {
-        this.getList();
-        message.success('删除成功');
-      } else {
-        message.error('删除失败');
-      }
-    });
-  };
-  showDetail = record => {
-    ajax({
-      method: 'postJson',
-      data: {
-        id: record,
-      },
-      api: 'cat',
-    }).then(res => {
-      if (res.code === 200) {
-        this.props.form.setFieldsValue({
-          catName: res.data.catName,
-          catIcon: res.data.catIcon,
-          id: res.data.id,
-          parentCatId: res.data.parentCatId,
-        });
-      } else {
-        message.error('获取分类失败');
-      }
-    });
-  };
-  getTotalCat = () => {
-    var that = this;
-    ajax({
-      method: 'postJson',
-      api: 'getCatTotalList',
-    }).then(res => {
-      if (res.code === 200) {
-        this.setState({
-          cats: res.data,
-        });
-      } else {
-        message.error('获取分类下拉列表失败');
-      }
-    });
-  };
-  getList = () => {
-    var that = this;
-    ajax({
-      method: 'postJson',
-      data: {
-        status: that.state.searchStatus,
-        catName: that.state.searchText,
-      },
-      api: 'catList',
-    }).then(res => {
-      if (res.code === 200) {
-        this.setState({
-          dataSource: res.data.list,
-        });
-      } else {
-        message.error('获取分类列表失败');
-      }
-    });
-  };
-  save = formData => {
-    var that = this;
-    ajax({
-      method: 'postJson',
-      data: formData,
-      api: 'saveCat',
-    }).then(res => {
-      if (res.code === 200) {
-        that.getList();
-        message.success('保存成功.');
-        this.props.form.setFieldsValue({
-          catName: '',
-          catIcon: '',
-          id: '',
-          parentCatId: '',
-        });
-        this.setState({
-          visible: false,
-        });
-      } else {
-        message.error('保存失败');
-      }
-    });
-  };
-  handlePut = id => {
-    var that = this;
-    ajax({
-      method: 'postJson',
-      data: {
-        id: id,
-      },
-      api: 'putCat',
-    }).then(res => {
-      if (res.code === 200) {
-        that.getList();
-      } else {
-        message.error('获取品牌列表失败');
-      }
-    });
-  };
-  handleDown = id => {
-    var that = this;
-    ajax({
-      method: 'postJson',
-      data: {
-        id: id,
-      },
-      api: 'downCat',
-    }).then(res => {
-      if (res.code === 200) {
-        that.getList();
-      } else {
-        message.error('获取品牌列表失败');
-      }
-    });
-  };
+  componentDidMount() {}
+
   handleSave = () => {
     const { form } = this.props;
     const { type } = this.state;
@@ -388,4 +189,4 @@ export class ProductCat extends Component {
     );
   }
 }
-export default Form.create()(ProductCat);
+export default Form.create()(Coupon);
