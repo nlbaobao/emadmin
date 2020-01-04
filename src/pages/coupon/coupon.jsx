@@ -3,32 +3,131 @@ import { message, Button, Table, Divider, Drawer, Form, Col, Row, Input, Select,
 import { ajax } from '../../utils/index';
 import './index.less';
 
-export class Coupon extends Component {
+export class Activity extends Component {
   constructor(props) {
     super(props);
     this.state = {
       visible: false,
     };
+    // {
+    //   "activityId": 0,
+    //   "activityImg": "string",
+    //   "activityUrl": "string",
+    //   "createDate": "2019-12-26T13:57:06.296Z",
+    //   "endDate": "2019-12-26T13:57:06.296Z",
+    //   "modifyDate": "2019-12-26T13:57:06.296Z",
+    //   "startDate": "2019-12-26T13:57:06.296Z",
+    //   "status": "string",
+    //   "userId": 0
+    // }
     this.columns = [
       {
-        title: '标题',
-        dataIndex: 'catName',
-        key: 'title',
+        title: '优惠卷名称',
+        dataIndex: 'discountName',
+        key: 'discountName',
       },
       {
-        title: 'icon',
-        dataIndex: 'catIcon',
-        key: 'icon',
+        title: 'activityUrl',
+        dataIndex: 'activityUrl',
+        key: 'activityUrl',
       },
       {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
+        title: '开始时间',
+        dataIndex: 'startDate',
+        key: 'startDate',
+      },
+      {
+        title: '结束时间',
+        dataIndex: 'endDate',
+        key: 'endDate',
+      },
+      {
+        title: '操作',
+        dataIndex: 'operate',
+        key: 'operate',
+        render: (text, record) => {
+          const { status } = record;
+          return (
+            <div style={{ cursor: 'pointer' }} className="all-operate">
+              <span onClick={() => {}}>修改</span>
+              <Divider type="vertical" />
+              <span
+                onClick={() => {
+                  this.deleteProduct(record.id);
+                }}
+              >
+                删除
+              </span>
+            </div>
+          );
+        },
       },
     ];
   }
   componentDidMount() {}
-
+  //活动列表
+  discountList = () => {
+    const { page, size } = this.state;
+    ajax({
+      method: 'postJson',
+      data: {
+        page,
+        size,
+      },
+      api: 'discountList',
+    }).then(res => {
+      if (res.code === 200) {
+        this.setState({
+          dataSource: res.data.list,
+          total: res.data.total,
+        });
+      } else {
+        message.error('获取商品列表失败');
+      }
+    });
+  };
+  //修改活动
+  getDiscountById = () => {
+    const { page, size } = this.state;
+    ajax({
+      method: 'postJson',
+      data: {
+        page,
+        size,
+      },
+      api: 'getDiscountById',
+    }).then(res => {
+      if (res.code === 200) {
+        this.setState({
+          dataSource: res.data.list,
+          total: res.data.total,
+        });
+      } else {
+        message.error('获取商品列表失败');
+      }
+    });
+  };
+  //新增活动
+  saveDiscount = () => {
+    const { page, size } = this.state;
+    ajax({
+      method: 'postJson',
+      data: {
+        page,
+        size,
+      },
+      api: 'saveDiscount',
+    }).then(res => {
+      if (res.code === 200) {
+        this.setState({
+          dataSource: res.data.list,
+          total: res.data.total,
+        });
+      } else {
+        message.error('获取商品列表失败');
+      }
+    });
+  };
   handleSave = () => {
     const { form } = this.props;
     const { type } = this.state;
@@ -112,61 +211,6 @@ export class Coupon extends Component {
           visible={visible}
           bodyStyle={{ paddingBottom: 80 }}
         >
-          <Form layout="vertical" hideRequiredMark>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="分类名">
-                  {getFieldDecorator('catName', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '分类名必填',
-                      },
-                    ],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入分类名" />)}
-                </Form.Item>
-                <Form.Item label="分类id">
-                  {getFieldDecorator('id', {
-                    rules: [{ required: false }],
-                  })(<Input type="hidden"></Input>)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="父分类">
-                  {getFieldDecorator('parentCatId', {
-                    rules: [{ required: false, message: '' }],
-                  })(
-                    <Select placeholder="请选择父分类">
-                      {this.state.cats.map(name => (
-                        <Option key={name.id}>{name.catName}</Option>
-                      ))}
-                    </Select>
-                  )}
-                </Form.Item>
-                <Form.Item label="分类id">
-                  {getFieldDecorator('id', {
-                    rules: [{ required: false }],
-                  })(<Input type="hidden"></Input>)}
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row gutter={16}>
-              <Col span={12}>
-                <Form.Item label="分类Icon">
-                  {getFieldDecorator('catIcon', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择图片',
-                      },
-                    ],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入图片链接" />)}
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
           <div
             style={{
               position: 'absolute',
@@ -189,4 +233,4 @@ export class Coupon extends Component {
     );
   }
 }
-export default Form.create()(Coupon);
+export default Form.create()(Activity);

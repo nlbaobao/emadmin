@@ -39,10 +39,12 @@ export default {
     'disableComment': '/product/disableComment',
     //活动管理
     'activityList': '/activity/activityList',
-    'addActivity': '/activity/addActivity',
+    'saveActivity': '/activity/saveActivity ',
     'deleteActivity': '/activity/deleteActivity/',
     'getActivityDetail': '/activity/getActivityDetail',
     'updateActivity': '/activity/updateActivity',
+    'putActivity': '/activity/putActivity',
+    'downActivity': '/activity/downActivity',
     //优惠卷管理
     'deleteDiscount': '/discount/deleteDiscount',
     'discountList': '/discount/discountList',
