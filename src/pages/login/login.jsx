@@ -29,7 +29,7 @@ export class Login extends Component {
       console.log(res)
       if(res.code === 200){
         const {msg} = res
-        message.success('登录失败')
+        message.success('登录成功')
         window.location.hash='/home/list'
         //把登录信息存进lcoalstorage
         localStorage.setItem('token',msg)

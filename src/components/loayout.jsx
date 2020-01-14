@@ -1,19 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import { Layout, Menu, Icon } from 'antd';
-import config from './config';
+import { Layout, Menu, Icon } from "antd";
+import config from "./config";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
-import './index.less';
+import "./index.less";
 export default class layout extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openKeys: [],
+      openKeys: []
     };
   }
   componentDidMount() {
-    const skeys = window.location.hash.split('/home')[1];
+    const skeys = window.location.hash.split("/home")[1];
     const openKeys = [];
     config.config.menuData.forEach(element => {
       element.child &&
@@ -24,15 +24,15 @@ export default class layout extends React.Component {
         });
     });
     this.setState({
-      openKeys,
+      openKeys
     });
   }
   render() {
     const { openKeys } = this.state;
-    const skeys = window.location.hash.split('/home')[1];
+    const skeys = window.location.hash.split("/home")[1];
     const { children } = this.props;
     const { menuData } = config.config;
-    console.log(openKeys, 'openKeys');
+    console.log(openKeys, "openKeys");
     const menu = menuData.map(item => {
       return (
         <SubMenu
@@ -44,7 +44,7 @@ export default class layout extends React.Component {
           // }}
           title={
             <span>
-              <Icon type="user" />
+              <Icon type={item.icon} />
               {item.name}
             </span>
           }
@@ -54,10 +54,11 @@ export default class layout extends React.Component {
               return (
                 <Menu.Item
                   onClick={() => {
-                    location.hash = '/home' + ele.url;
+                    location.hash = "/home" + ele.url;
                   }}
                   key={ele.url}
                 >
+                  <Icon type={ele.icon} />
                   {ele.subName}
                 </Menu.Item>
               );
@@ -67,7 +68,7 @@ export default class layout extends React.Component {
     });
     return (
       <div className="container">
-        <Layout style={{ height: '100%' }}>
+        <Layout style={{ height: "100%" }}>
           <Header className="header">
             <div className="logo">
               {/* <Icon type="slack" /> */}
@@ -82,20 +83,20 @@ export default class layout extends React.Component {
                 }}
                 mode="inline"
                 theme="dark"
-                style={{ height: '100%', borderRight: 0 }}
+                style={{ height: "100%", borderRight: 0 }}
                 selectedKeys={skeys}
                 openKeys={openKeys}
               >
                 {menu}
               </Menu>
             </Sider>
-            <Layout style={{ padding: '24px' }}>
+            <Layout style={{ padding: "24px" }}>
               <Content
                 style={{
-                  background: '#fff',
+                  background: "#fff",
                   padding: 24,
-                  height: '100%',
-                  margin: 0,
+                  height: "100%",
+                  margin: 0
                 }}
               >
                 {children}

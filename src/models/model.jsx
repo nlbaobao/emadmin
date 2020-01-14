@@ -1,6 +1,7 @@
 import {observable,action} from 'mobx'
 class PublicStatus {
     @observable file = '';
+    @observable path = '';
     @observable richText = '';
     @observable productFile='';
     @observable imgIp='http://2hq8388555.goho.co/wx';

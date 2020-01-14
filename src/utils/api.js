@@ -5,9 +5,15 @@ export default {
     //user
     'userChildList': '/user/userChildList',
     'userList': '/user/userList',
+    'disableUser': '/user/disableUser',
+    'enableUser': '/user/enableUser',
     'userMoneyLogList': '/user/userMoneyLogList',
     'userWithDrawAudit': '/user/userWithDrawAudit',
     'userWithDrawList': '/user/userWithDrawList',
+    'userWithDrawAudit': '/user/userWithDrawAudit',
+    'rejectUserWithDrawAudit': '/user/rejectUserWithDrawAudit',
+
+
     //商品品牌
     'brand': '/product/brand',
     'brandList': '/product/getBrandList',
@@ -33,23 +39,39 @@ export default {
     'deleteProduct': '/product/deleteProduct',
     'downProduct': '/product/downProduct',
     'putAwayProduct': '/product/putAwayProduct',
-    'getProductSkuListPage': '/product/getProductById',
+    'getProductById': '/product/getProductById',
     'getProductCommentListPage': '/product/getProductCommentListPage',
     'putAwayComment': '/product/putAwayComment',
     'disableComment': '/product/disableComment',
+    'saveComment': '/product/saveComment',
+
     //活动管理
-    'activityList': '/activity/activityList',
+    'activityList': '/activity/getActivityListPage',
     'saveActivity': '/activity/saveActivity ',
-    'deleteActivity': '/activity/deleteActivity/',
+    'deleteActivity': '/activity/deleteActivity',
     'getActivityDetail': '/activity/getActivityDetail',
-    'updateActivity': '/activity/updateActivity',
+    'updateActivity': '/activity/getActivityById',
     'putActivity': '/activity/putActivity',
     'downActivity': '/activity/downActivity',
+    'getAllProductSkuList': '/product/getAllProductSkuList',
+    'getAllProductList': '/product/getAllProductList',
+    'getActivityTryList': '/activity/getActivityTryList',
+    'applyTryPass': '/activity/applyTryPass',
+    'applyTryReject': '/activity/applyTryReject',
+
+
     //优惠卷管理
     'deleteDiscount': '/discount/deleteDiscount',
     'discountList': '/discount/discountList',
     'getDiscountById': '/discount/getDiscountById',
     'saveDiscount': '/discount/saveDiscount',
+    'allUserList': '/user/allUserList',
+    'putAwayDiscount': '/discount/putAwayDiscount',
+    'downAwayDiscount': '/discount/downAwayDiscount',
+
+
+
+
     //banner
     'addBanner': '/banner/addBanner',
     'bannerList': '/banner/bannerList',
@@ -62,6 +84,11 @@ export default {
     'getNoticeDetail': '/notice/getNoticeDetail',
     'noticeList': '/notice/noticeList',
     'updateNotice': '/notice/updateNotice',
+    //订单
+    'orderList': '/order/orderList',
+    'sendGoods': '/order/sendGoods',
+    'getDrawbackInfo': '/order/getDrawbackInfo',
+
     //上传
     'fileUpload': '/fileUpload'
 }

@@ -1,62 +1,36 @@
-import React from 'react';
-import { Modal, message } from 'antd';
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { EditorState, ContentState } from 'draft-js';
-import draftToHtml from 'draftjs-to-html';
-import htmlToDraft from 'html-to-draftjs';
-import { ajax } from '../utils/index';
-import { observer, inject } from 'mobx-react';
-import config from './config';
-@inject('PublicStatus')
+import React from "react";
+import { Modal, message } from "antd";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from "draftjs-to-html";
+import { ajax } from "../utils/index";
+import { observer, inject } from "mobx-react";
+import config from "./config";
+@inject("PublicStatus")
 @observer
 class RichText extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showRichText: false,
-      editorContent: '',
-      editorState: '',
+      editorContent: ""
     };
   }
-  static getDerivedStateFromProps(props, state) {
-    const { PublicStatus } = props;
-    const { richText } = PublicStatus;
-    console.log(richText, 'richText');
-  }
+  componentWillReceiveProps(props) {}
   componentDidMount() {}
   handleClearContent = () => {
-    this.setState({
-      editorState: '',
-    });
+    const { updateDtailUrl } = this.props;
+    updateDtailUrl("");
   };
 
-  transformHtmlToDraftState = (html = '') => {
-    const blocksFromHtml = htmlToDraft(html);
-    const { contentBlocks, entityMap } = blocksFromHtml;
-    const contentState = ContentState.createFromBlockArray(contentBlocks, entityMap);
-    return EditorState.createWithContent(contentState);
-  };
   onEditorChange = editorContent => {
-    const { PublicStatus } = this.props;
-    const { setRichText } = PublicStatus;
-    setRichText(draftToHtml(editorContent));
-    console.log(draftToHtml(editorContent));
-    this.setState({
-      editorContent,
-    });
-  };
-  // 从接口转换数据
-  translate = data => {
-    this.setState({
-      editorState: this.transformHtmlToDraftState(data),
-    });
+    const { updateEditorContent } = this.props;
+    updateEditorContent(draftToHtml(editorContent));
   };
 
   onEditorStateChange = editorState => {
-    this.setState({
-      editorState,
-    });
+    const { updateDtailUrl } = this.props;
+    updateDtailUrl(editorState);
   };
 
   imageUploadCallBack = file =>
@@ -72,8 +46,8 @@ class RichText extends React.Component {
         //console.log(img); // 获取图片
         // console.log(img.src.length)
         // 缩放图片需要的canvas（也可以在DOM中直接定义canvas标签，这样就能把压缩完的图片不转base64也能直接显示出来）
-        let canvas = document.createElement('canvas');
-        let context = canvas.getContext('2d');
+        let canvas = document.createElement("canvas");
+        let context = canvas.getContext("2d");
 
         // 图片原始尺寸
         let originWidth = this.width;
@@ -106,12 +80,12 @@ class RichText extends React.Component {
         let newUrl = null;
         /*第一个参数是创建的img对象；第二三个参数是左上角坐标，后面两个是画布区域宽高*/
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
         ajax({
-          api: 'fileUpload',
-          method: 'fileUpload',
+          api: "fileUpload",
+          method: "fileUpload",
           processData: false,
-          data: formData,
+          data: formData
         }).then(res => {
           if (res.code == 200) {
             const { path } = res.data[0];
@@ -119,8 +93,8 @@ class RichText extends React.Component {
             const link = imgIp + path;
             resolve({
               data: {
-                link,
-              },
+                link
+              }
             });
           } else {
             message.error(res.msg);
@@ -130,12 +104,12 @@ class RichText extends React.Component {
     });
 
   render() {
-    const { editorState } = this.state;
-    // console.log(draftjs(editorContent),editorState,'editorContent')
+    const { detail } = this.props;
+    console.log(detail, "detail");
     return (
       <div>
         <Editor
-          editorState={editorState}
+          editorState={detail}
           onContentStateChange={this.onEditorChange}
           onEditorStateChange={this.onEditorStateChange}
           toolbar={{
@@ -145,9 +119,9 @@ class RichText extends React.Component {
               alignmentEnabled: true,
               uploadCallback: this.imageUploadCallBack,
               previewImage: true,
-              inputAccept: 'image/gif,image/jpeg,img/jpg,image/png,img/svg',
-              alt: { persent: false, mandatory: false },
-            },
+              inputAccept: "image/gif,image/jpeg,img/jpg,image/png,img/svg",
+              alt: { persent: false, mandatory: false }
+            }
           }}
         />
 
@@ -156,7 +130,7 @@ class RichText extends React.Component {
           visible={this.state.showRichText}
           onCancel={() => {
             this.setState({
-              showRichText: false,
+              showRichText: false
             });
           }}
           footer={null}

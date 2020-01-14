@@ -1,69 +1,95 @@
-import React, { Component } from 'react';
-import { message, Button, Table, Divider, Drawer, Form, Col, Row, Input, Select, Pagination } from 'antd';
-import { ajax } from '../../utils/index';
-import './index.less';
-
+import React, { Component } from "react";
+import {
+  message,
+  Popover,
+  Button,
+  Table,
+  Divider,
+  Drawer,
+  Form,
+  Col,
+  Row,
+  Input,
+  Select,
+  Pagination,
+  Upload,
+  Icon
+} from "antd";
+import { ajax, uuid } from "../../utils/index";
+import "./index.less";
+import config from "../../components/config";
+const { Option } = Select;
 export class ProductCat extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: 0,
       dataSource: [],
       cats: [],
+      page: 1,
+      size: 10,
       visible: false,
-      type: '1', // 1代表新增
+      type: "1", // 1代表新增
+      total: 0,
+      fileList: []
     };
     this.columns = [
       {
-        title: '标题',
-        dataIndex: 'catName',
-        key: 'title',
+        title: "标题",
+        dataIndex: "catName",
+        key: "title"
       },
       {
-        title: 'icon',
-        dataIndex: 'catIcon',
-        key: 'icon',
-        render: record => {
-          return (
+        title: "icon",
+        dataIndex: "catIcon",
+        key: "icon",
+        render: (text, record) => {
+          const content = (
             <img
-              src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1577428023099&di=d4967fbf704eda41a255e3ea7c0b49bb&imgtype=0&src=http%3A%2F%2F7776175.s21i-7.faiusr.com%2F2%2FABUIABACGAAgy_n_tgUo2ILWNjCgBziABA.jpg"
-              alt=""
-              style={{
-                width: '5    0px',
-                height: '50px',
-                borderRadius: '50%',
-              }}
+              style={{ width: 100, height: 100 }}
+              src={config.config.imgIp + record.catIcon}
             />
           );
-        },
+          return (
+            <Popover content={content} title="icon">
+              <img
+                style={{ width: 20, height: 20 }}
+                src={config.config.imgIp + record.catIcon}
+              />
+            </Popover>
+          );
+        }
       },
       {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
+        title: "状态",
+        dataIndex: "status",
+        key: "status",
         render: s => {
           if (s == 2) {
-            return '正常';
+            return "正常";
           } else if (s == 3) {
-            return '禁用';
+            return "禁用";
           } else {
-            return '草稿';
+            return "草稿";
           }
-        },
+        }
       },
       {
-        title: '操作',
-        dataIndex: 'id',
-        key: 'operate',
-        render: record => {
+        title: "操作",
+        dataIndex: "operate",
+        key: "operate",
+        render: (text, record) => {
+          const { status, id } = record;
+
           return (
             <div>
               <span
                 onClick={() => {
-                  this.showDetail(record);
                   this.setState({
                     visible: true,
-                    type: '2',
+                    type: "2"
                   });
+                  this.showDetail(id);
                 }}
               >
                 修改
@@ -71,32 +97,41 @@ export class ProductCat extends Component {
               <Divider type="vertical" />
               <span
                 onClick={() => {
-                  this.delete(record);
+                  this.delete(id);
                 }}
               >
                 删除
               </span>
-              <Divider type="vertical" />
-              <span
-                onClick={() => {
-                  this.handlePut(record);
-                }}
-              >
-                上架
-              </span>
-              <Divider type="vertical" />
-              <span
-                onClick={() => {
-                  this.handleDown(record);
-                }}
-              >
-                下架
-              </span>
+              {status === 3 || status === 4 ? (
+                <span>
+                  <Divider type="vertical" />
+                  <span
+                    onClick={() => {
+                      this.handlePut(id);
+                    }}
+                  >
+                    上架
+                  </span>
+                </span>
+              ) : null}
+              {status === 2 ? (
+                <span>
+                  <Divider type="vertical" />
+                  <span
+                    onClick={() => {
+                      this.handleDown(id);
+                    }}
+                  >
+                    下架
+                  </span>
+                </span>
+              ) : null}
             </div>
           );
-        },
-      },
+        }
+      }
     ];
+    this.imgIp = config.config.imgIp;
   }
   componentDidMount() {
     this.getList();
@@ -104,144 +139,210 @@ export class ProductCat extends Component {
   }
   delete = id => {
     ajax({
-      method: 'postJson',
+      method: "postJson",
       data: {
-        id: id,
+        id: id
       },
-      api: 'deleteCat',
+      api: "deleteCat"
     }).then(res => {
       if (res.code === 200) {
         this.getList();
-        message.success('删除成功');
+        message.success("删除成功");
       } else {
-        message.error('删除失败');
+        message.error("删除失败");
       }
     });
   };
   showDetail = record => {
     ajax({
-      method: 'postJson',
+      method: "postJson",
       data: {
-        id: record,
+        id: record
       },
-      api: 'cat',
+      api: "cat"
     }).then(res => {
       if (res.code === 200) {
         this.props.form.setFieldsValue({
           catName: res.data.catName,
-          catIcon: res.data.catIcon,
           id: res.data.id,
-          parentCatId: res.data.parentCatId,
+          parentCatId: res.data.parentCatId
+        });
+        const { catIcon } = res.data;
+        this.setState({
+          id: record,
+          fileList:
+            catIcon &&
+            [catIcon].map((item, index) => {
+              console.log(catIcon);
+              return {
+                uid: uuid(),
+                name: item,
+                status: "done",
+                url: this.imgIp + item
+              };
+            })
         });
       } else {
-        message.error('获取分类失败');
+        message.error("获取分类失败");
       }
     });
   };
   getTotalCat = () => {
-    var that = this;
     ajax({
-      method: 'postJson',
-      api: 'getCatTotalList',
+      method: "postJson",
+      api: "getCatTotalList"
     }).then(res => {
       if (res.code === 200) {
         this.setState({
-          cats: res.data,
+          cats: res.data
         });
       } else {
-        message.error('获取分类下拉列表失败');
+        message.error("获取分类下拉列表失败");
       }
     });
   };
   getList = () => {
-    var that = this;
+    const { page, size, searchStatus, searchText } = this.state;
     ajax({
-      method: 'postJson',
+      method: "postJson",
       data: {
-        status: that.state.searchStatus,
-        catName: that.state.searchText,
+        status: searchStatus,
+        catName: searchText,
+        page,
+        size
       },
-      api: 'catList',
+      api: "catList"
     }).then(res => {
       if (res.code === 200) {
         this.setState({
           dataSource: res.data.list,
+          total: res.data.total
         });
       } else {
-        message.error('获取分类列表失败');
+        message.error("获类目列表失败");
       }
     });
   };
-  save = formData => {
-    var that = this;
+  save = values => {
+    values.id = this.state.id;
     ajax({
-      method: 'postJson',
-      data: formData,
-      api: 'saveCat',
+      method: "postJson",
+      data: values,
+      api: "saveCat"
     }).then(res => {
       if (res.code === 200) {
-        that.getList();
-        message.success('保存成功.');
-        this.props.form.setFieldsValue({
-          catName: '',
-          catIcon: '',
-          id: '',
-          parentCatId: '',
-        });
+        this.getList();
         this.setState({
           visible: false,
+          fileList: []
+        });
+        message.success("保存成功.");
+        this.props.form.setFieldsValue({
+          catName: "",
+          id: "",
+          parentCatId: ""
         });
       } else {
-        message.error('保存失败');
+        message.error("保存失败");
       }
     });
   };
   handlePut = id => {
     var that = this;
     ajax({
-      method: 'postJson',
+      method: "postJson",
       data: {
-        id: id,
+        id: id
       },
-      api: 'putCat',
+      api: "putCat"
     }).then(res => {
       if (res.code === 200) {
         that.getList();
       } else {
-        message.error('获取品牌列表失败');
+        message.error("上架失败");
       }
+    });
+  };
+
+  updateImg = data => {
+    this.setState({
+      PublicStatus: data
     });
   };
   handleDown = id => {
     var that = this;
     ajax({
-      method: 'postJson',
+      method: "postJson",
       data: {
-        id: id,
+        id: id
       },
-      api: 'downCat',
+      api: "downCat"
     }).then(res => {
       if (res.code === 200) {
         that.getList();
       } else {
-        message.error('获取品牌列表失败');
+        message.error("下架失败");
       }
     });
   };
   handleSave = () => {
     const { form } = this.props;
-    const { type } = this.state;
-
+    const { type, fileList } = this.state;
+    let icon = "";
+    if (fileList.length !== 0) {
+      icon = fileList.map(item => item.url)[0];
+    } else {
+      message.info("至少上传一张图片");
+      return;
+    }
     form.validateFields((err, values) => {
+      values.catIcon = icon;
+      values.catIcon = icon && icon.replace("http://zxy.world:9998/wx/", "");
       if (!err) {
         this.save(values);
       }
     });
   };
+  handleChange = info => {
+    let fileList = [...info.fileList];
+    fileList = fileList.slice(-1);
+    fileList = fileList.map(file => {
+      if (file.response && file.response.code === 200) {
+        const { name, path } = file.response.data[0];
+        file.name = name;
+        file.url = path;
+      }
+      return file;
+    });
+    this.setState({ fileList }, () => {
+      console.log(this.state.fileList, "fileList");
+    });
+  };
   render() {
-    const { dataSource, visible, type, searchStatus, searchText } = this.state;
+    const {
+      dataSource,
+      visible,
+      type,
+      searchStatus,
+      searchText,
+      page,
+      size,
+      fileList,
+      total
+    } = this.state;
     const { form } = this.props;
     const { getFieldDecorator } = form;
+    console.log(fileList);
+    const props = {
+      name: "file",
+      action: "http://zxy.world:9998/fileUpload",
+      headers: {
+        authorization: "authorization-text"
+      },
+      multiple: "false",
+      listType: "picture",
+      onChange: this.handleChange
+    };
     return (
       <div className="banner-list">
         <Button
@@ -249,7 +350,7 @@ export class ProductCat extends Component {
           type="primary"
           onClick={() => {
             this.setState({
-              visible: true,
+              visible: true
             });
           }}
         >
@@ -258,12 +359,12 @@ export class ProductCat extends Component {
         <div style={{ marginBottom: 20 }}>
           <Row gutter={24}>
             <Col span={10}>
-              <span style={{ marginRight: 20 }}>内容:</span>
+              <span style={{ marginRight: 20 }}>类目名称:</span>
               <Input
                 value={searchText}
                 onChange={e => {
                   this.setState({
-                    searchText: e.target.value,
+                    searchText: e.target.value
                   });
                 }}
                 style={{ width: 200 }}
@@ -275,7 +376,7 @@ export class ProductCat extends Component {
                 value={searchStatus}
                 onChange={e => {
                   this.setState({
-                    searchStatus: e,
+                    searchStatus: e
                   });
                 }}
                 style={{ width: 200 }}
@@ -298,14 +399,34 @@ export class ProductCat extends Component {
             </Col>
           </Row>
         </div>
-        <Table style={{ marginBottom: 20 }} pagination={false} dataSource={dataSource} columns={this.columns} />
-        <Pagination defaultCurrent={6} total={500} />
+        <Table
+          style={{ marginBottom: 20 }}
+          pagination={false}
+          dataSource={dataSource}
+          columns={this.columns}
+          rowKey="id"
+        />
+        <Pagination
+          onChange={e => {
+            this.setState(
+              {
+                page: e
+              },
+              () => {
+                this.getList();
+              }
+            );
+          }}
+          current={page}
+          pageSize={size}
+          total={total}
+        />
         <Drawer
-          title={type === '1' ? '新增' : '修改'}
+          title={type === "1" ? "新增类目" : "修改类目"}
           width={720}
           onClose={() => {
             this.setState({
-              visible: false,
+              visible: false
             });
           }}
           visible={visible}
@@ -315,27 +436,27 @@ export class ProductCat extends Component {
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item label="分类名">
-                  {getFieldDecorator('catName', {
+                  {getFieldDecorator("catName", {
                     rules: [
                       {
                         required: true,
-                        message: '分类名必填',
-                      },
-                    ],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入分类名" />)}
-                </Form.Item>
-                <Form.Item label="分类id">
-                  {getFieldDecorator('id', {
-                    rules: [{ required: false }],
-                  })(<Input type="hidden"></Input>)}
+                        message: "分类名必填"
+                      }
+                    ]
+                  })(
+                    <Input
+                      style={{ width: "100%" }}
+                      placeholder="请输入分类名"
+                    />
+                  )}
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item label="父分类">
-                  {getFieldDecorator('parentCatId', {
-                    rules: [{ required: false, message: '' }],
+                  {getFieldDecorator("parentCatId", {
+                    rules: [{ required: false, message: "" }]
                   })(
                     <Select placeholder="请选择父分类">
                       {this.state.cats.map(name => (
@@ -344,44 +465,50 @@ export class ProductCat extends Component {
                     </Select>
                   )}
                 </Form.Item>
-                <Form.Item label="分类id">
-                  {getFieldDecorator('id', {
-                    rules: [{ required: false }],
-                  })(<Input type="hidden"></Input>)}
-                </Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
               <Col span={12}>
                 <Form.Item label="分类Icon">
-                  {getFieldDecorator('catIcon', {
-                    rules: [
-                      {
-                        required: true,
-                        message: '请选择图片',
-                      },
-                    ],
-                  })(<Input style={{ width: '100%' }} placeholder="请输入图片链接" />)}
+                  <Upload {...props} fileList={fileList}>
+                    <Button>
+                      <Icon type="upload" />
+                      上传icon
+                    </Button>
+                  </Upload>
                 </Form.Item>
               </Col>
             </Row>
           </Form>
           <div
             style={{
-              position: 'absolute',
+              position: "absolute",
               right: 0,
               bottom: 0,
-              width: '100%',
-              borderTop: '1px solid #e9e9e9',
-              padding: '10px 16px',
-              background: '#fff',
-              textAlign: 'right',
+              width: "100%",
+              borderTop: "1px solid #e9e9e9",
+              padding: "10px 16px",
+              background: "#fff",
+              textAlign: "right"
             }}
           >
-            <Button onClick={this.handleSave} style={{ marginRight: 8 }} style={{ marginRight: 8 }}>
+            <Button
+              onClick={this.handleSave}
+              style={{ marginRight: 8 }}
+              style={{ marginRight: 8 }}
+            >
               确定
             </Button>
-            <Button type="primary">取消</Button>
+            <Button
+              onClick={() => {
+                this.setState({
+                  visible: false
+                });
+              }}
+              type="primary"
+            >
+              取消
+            </Button>
           </div>
         </Drawer>
       </div>
