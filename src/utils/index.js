@@ -6,7 +6,8 @@ import {
 } from '../utils/fetch'
 import apiList from './api'
 export const ajax = (param) => {
-  const baseUrl = 'http://2hq8388555.goho.co'
+  // const baseUrl = 'http://2hq8388555.goho.co'
+  const baseUrl = 'http://test.zxy.world:7777/';
   // const baseUrl = 'http://zxy.world:9998'
   const {
     method,
