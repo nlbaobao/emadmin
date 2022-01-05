@@ -26,7 +26,7 @@ export default class APP extends React.Component {
       <Layout>
         <HashRouter>
           <Switch>
-            <Route exact path="/home" render={() => <Redirect to="/user/message" />} />
+            <Route exact path="/home" render={() => <Redirect to="/home/user/message" />} />
             <Route exact path="/home/user/message" component={UserMessage} />
             <Route exact path="/home/user/money" component={Money} />
             <Route exact path="/home/list/details" component={Details} />
