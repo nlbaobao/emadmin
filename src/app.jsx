@@ -18,7 +18,6 @@ import Activity from './pages/activity/activity';
 import TryMessage from './pages/activity/trymessage';
 import OrderManage from './pages/order/order';
 import DataEchart from './pages/data/data';
-import Algo from './pages/algo';
 
 export default class APP extends React.Component {
   render() {
@@ -52,7 +51,6 @@ export default class APP extends React.Component {
           <Route exact path="/" render={() => <Redirect to="/login" />} />
           <Route path="/home" component={IndexRoute} />
           <Route path="/login" component={Login} />
-          <Route exact path="/algo" component={Algo} />
         </Switch>
       </HashRouter>
     );
