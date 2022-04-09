@@ -81,7 +81,7 @@
     "draftjs-to-html": "^0.9.1",
     "mobx": "^5.15.4",
     "mobx-react": "^5.4.4",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "prop-types": "^15.7.2",
     "qs": "^6.9.3",
     "react": "^16.13.1",
